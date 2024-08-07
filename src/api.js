@@ -7,7 +7,6 @@ dotenv.config();
 
 const authenticate = async () => {
   try {
-    console.log("antes");
     const response = await axios.post(process.env.URL_AUTH, {
       Username: process.env.USER,
       Password: process.env.PASSWORD,
@@ -19,19 +18,6 @@ const authenticate = async () => {
     process.exit(1);
   }
 };
-
-// const fetchDataFromDatabase = async () => {
-//     try {
-//         await dbClient.connect();
-//         const query = 'SELECT * FROM your_table';  // Cambia esto a tu consulta SQL real
-//         const result = await dbClient.query(query);
-//         await dbClient.end();
-//         return result.rows;
-//     } catch (error) {
-//         console.error('Error fetching data from database:', error.message);
-//         process.exit(1);
-//     }
-// };
 
 const sendData = async (token, data) => {
   try {
@@ -48,7 +34,6 @@ const sendData = async (token, data) => {
 };
 
 const main = async () => {
-  console.log("entre");
   const token = await authenticate();
   console.log({ token });
   await db.fetchData();
