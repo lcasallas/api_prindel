@@ -20,25 +20,34 @@ const authenticate = async () => {
 };
 
 const sendData = async (token, data) => {
-  try {
-    const response = await axios.post(process.env.URL_SEND, data, {
-      headers: {
-        Authorization: `⁠Bearer ${token}`,
-      },
-    });
-    console.log("Data sent successfully:", response.data);
-  } catch (error) {
-    console.error("Error sending data:", error.message);
-    process.exit(1);
-  }
+  for (const row of data){
+    const param = {
+      Barcode: row.nro_guia,
+      UserID: "",
+      DigitalID: "ENT",
+      FileBase64: "",
+      Latitude: "",
+      Longitude: ""
+    }
+    try {
+      const response = await axios.post(process.env.URL_SEND, param, {
+        headers: {
+          Authorization: `⁠Bearer ${token}`,
+        },
+      });
+      console.log("Data sent successfully:", response.data);
+    } catch (error) {
+      console.error("Error sending data:", error.message);
+      process.exit(1);
+    }
+  }  
 };
 
 const main = async () => {
   const token = await authenticate();
   console.log({ token });
-  await db.fetchData();
-  // const data = await fetchDataFromDatabase();
-  // await sendData(token, data);
+  const data = await fetchDataFromDatabase();
+  await sendData(token, data);
 };
 
 main();

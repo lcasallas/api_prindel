@@ -26,7 +26,7 @@ const connect = async () => {
 const fetchData = async () => {
   try {
     await connect();
-    const query = "SELECT * FROM t_areas_trabajo"; // Cambia esto a tu consulta SQL real
+    const query = " select nro_guia, id_gestion_detalle from t_guias_x_proceso where orden = 74962  limit 4"; // Cambia esto a tu consulta SQL real
     const result = await dbClient.query(query);
     await dbClient.end();
     console.log({ result: result.rows });
