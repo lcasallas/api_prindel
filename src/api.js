@@ -19,20 +19,28 @@ const authenticate = async () => {
   }
 };
 
+const sanitizeBearerToken = (token) => {
+  return token.replace(/[^a-zA-Z0-9._-]/g, '');
+};
+
+
+
 const sendData = async (token, data) => {
   for (const row of data){
     const param = {
       Barcode: row.nro_guia,
-      UserID: "",
+      UserID: "test",
       DigitalID: "ENT",
-      FileBase64: "",
-      Latitude: "",
-      Longitude: ""
+      FileBase64: "test",
+      Latitude: "test",
+      Longitude: "test"
     }
+    console.log(param)
     try {
+      console.log('TOKEN:', token)
       const response = await axios.post(process.env.URL_SEND, param, {
         headers: {
-          Authorization: `⁠Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
       console.log("Data sent successfully:", response.data);
@@ -45,9 +53,10 @@ const sendData = async (token, data) => {
 
 const main = async () => {
   const token = await authenticate();
+  bearerToken = sanitizeBearerToken(token);
   console.log({ token });
-  const data = await fetchDataFromDatabase();
-  await sendData(token, data);
+  const data = await db.fetchData();
+  await sendData(bearerToken, data);
 };
 
 main();
