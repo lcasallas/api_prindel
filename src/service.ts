@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { AuthResponse, DataGuides } from "../types";
 const fs = require("fs");
 
-const TEST_NRO_GUIA = "MT000143874COA";
+const TEST_NRO_GUIA = "MT000143874CO";
 dotenv.config();
 
 const authenticate = async (): Promise<string> => {
@@ -49,14 +49,14 @@ const liquidate = async (
       })
       .post(url, {
         Barcode: TEST_NRO_GUIA,
-        CausalLiquidationID: 4,
+        CausalLiquidationID: 9,
         Names: "juan",
         Observations: "ninguna",
       });
     console.log({ res: response.data });
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      console.error("Error during authentication:", error.message);
+      console.error("Error during authentication:", { error });
     } else {
       console.error("Unexpected error:", error);
     }
