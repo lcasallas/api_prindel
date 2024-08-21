@@ -1,10 +1,12 @@
 import { authenticate, liquidate } from "./service";
-import { fetchData } from "./db";
+import { connect, disconnect, fetchData } from "./db";
 
 const main = async () => {
+  await connect();
   const token = await authenticate();
   const data = await fetchData("v_guias_reportar_472");
-  await liquidate(token);
+  await liquidate(data, token);
+  //await disconnect();
 };
 
 main();

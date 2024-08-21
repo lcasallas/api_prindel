@@ -1,9 +1,10 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import dotenv from "dotenv";
 import { AuthResponse, DataGuides } from "../types";
+import { saveLiquidateLog } from "./db";
 const fs = require("fs");
 
-const TEST_NRO_GUIA = "MT000143874CO";
+const TEST_NRO_GUIA = "MT000143857CO";
 dotenv.config();
 
 const authenticate = async (): Promise<string> => {
@@ -34,34 +35,65 @@ const authenticate = async (): Promise<string> => {
   }
 };
 
-const liquidate = async (
-  // data: DataGuides,
-  token: string
-): Promise<void> => {
-  try {
-    const url = process.env.URL_LIQUIDATE || "";
-    console.log({ urla: url, token });
-    const response: AxiosResponse = await axios
-      .create({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .post(url, {
-        Barcode: TEST_NRO_GUIA,
-        CausalLiquidationID: 9,
-        Names: "juan",
-        Observations: "ninguna",
-      });
-    console.log({ res: response.data });
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error during authentication:", { error });
-    } else {
-      console.error("Unexpected error:", error);
-    }
-    process.exit(1);
-  }
+const liquidate = async (data: DataGuides, token: string): Promise<void> => {
+  const url = process.env.URL_LIQUIDATE || "";
+  await Promise.all(
+    data.map(async (envio) => {
+      const guia = envio.nro_guia;
+      const causal = envio.codigo_cliente;
+      try {
+        const response: AxiosResponse = await axios.post(
+          url,
+          {
+            Barcode: guia,
+            CausalLiquidationID: causal,
+            DriverID: 10,
+            VehicleID: 10,
+            CargueID: 0,
+            Procedente: 0,
+            Names: "",
+            Observations: "",
+          },
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
+        await saveLiquidateLog(envio, response.status, response.data);
+        console.log({
+          "Guia:": guia,
+          "Response message:": response.data,
+          "Response status:": response.status,
+        });
+      } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError;
+
+          // Verifica si la respuesta existe en el error
+          if (axiosError.response) {
+            console.log({
+              "Guia:": guia,
+              "Error status:": axiosError.response.status,
+              "Error message:": axiosError.response.data,
+            });
+            await saveLiquidateLog(
+              envio,
+              axiosError.response.status,
+              //@ts-ignore
+              `${axiosError.response.data.Message}`
+            );
+          } else {
+            console.error("Error sin respuesta:", axiosError.message);
+          }
+        } else {
+          console.error("Error desconocido:", error);
+        }
+      }
+    })
+  );
 };
 
 const digitalization = async (
@@ -71,7 +103,7 @@ const digitalization = async (
   try {
     const url = process.env.URL_LIQUIDATE || "";
     const imagenBuffer = fs.readFileSync(
-      "/IMGFOLLOW2/2024/8/75578/TC005273943CO.png"
+      `/IMGFOLLOW2/2024/8/75578/${TEST_NRO_GUIA}.png`
     );
     const imagenBase64 = imagenBuffer.toString("base64");
 

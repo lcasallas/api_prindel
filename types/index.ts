@@ -10,7 +10,7 @@ export interface AuthResponse {
   Token: string;
 }
 
-type Guide = {
+export type Guide = {
   id_guia: string;
   nro_guia: string;
   id_cliente: number;
@@ -25,3 +25,7 @@ type Guide = {
 };
 
 export type DataGuides = Guide[];
+
+export interface AuthResponse {
+  Token: string;
+}
