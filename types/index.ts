@@ -20,9 +20,22 @@ export type Guide = {
   id_gestion_detalle: number;
   gestion_detalle: string;
   fecha_gestion: string;
-  ruta_imagen: string;
-  codigo_cliente: string;
+  ruta_imagen?: string;
+  codigo_cliente?: string;
 };
+
+export type Param = {
+  Barcode: string;
+  UserID: string;
+  DigitalID: string;
+  FileBase64: string;
+  Latitude: string;
+  Longitude: string;
+}
+
+// export type NroGuide = {
+//   nro_guia: string
+// }
 
 export type DataGuides = Guide[];
 

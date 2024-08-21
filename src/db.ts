@@ -35,7 +35,7 @@ const disconnect = async () => {
 
 const fetchData = async (tableName: string) => {
   try {
-    const query = `SELECT * FROM ${tableName} WHERE id_orden = 75091`;
+    const query = `SELECT * FROM ${tableName} WHERE id_orden = 75091 limit 2`;
     const result = await dbClient.query(query);
     //await dbClient.end();
     return result.rows;

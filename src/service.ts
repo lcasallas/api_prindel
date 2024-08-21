@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import dotenv from "dotenv";
-import { AuthResponse, DataGuides } from "../types";
+import { AuthResponse, DataGuides, Param, Guide } from "../types";
 import { saveLiquidateLog } from "./db";
 const fs = require("fs");
 
@@ -32,6 +32,35 @@ const authenticate = async (): Promise<string> => {
       console.error("Unexpected error:", error);
     }
     process.exit(1);
+  }
+};
+
+
+
+const sendData = async (data: Guide[], token: string): Promise<void> => {
+  for (const row of data) {
+    console.log('ROW', row.nro_guia)
+    const param: Param = {
+      Barcode: row.nro_guia,
+      UserID: "test",
+      DigitalID: "ENT",
+      FileBase64: "test",
+      Latitude: "test",
+      Longitude: "test"
+    };
+    // console.log(param);
+    try {
+      // console.log('TOKEN:', token);
+      const response = await axios.post(process.env.URL_SEND as string, param, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      console.log("Data sent successfully:", response.data);
+    } catch (error) {
+      console.error("Error sending data:", (error as Error).message);
+      process.exit(1);
+    }
   }
 };
 
@@ -130,4 +159,4 @@ const digitalization = async (
   }
 };
 
-export { authenticate, liquidate };
+export { authenticate, sendData, liquidate };
