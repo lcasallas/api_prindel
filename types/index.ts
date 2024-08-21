@@ -33,10 +33,6 @@ export type Param = {
   Longitude: string;
 }
 
-// export type NroGuide = {
-//   nro_guia: string
-// }
-
 export type DataGuides = Guide[];
 
 export interface AuthResponse {

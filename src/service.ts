@@ -35,23 +35,26 @@ const authenticate = async (): Promise<string> => {
   }
 };
 
-
-
-const sendData = async (data: Guide[], token: string): Promise<void> => {
+const digitalization = async (data: Guide[], token: string): Promise<void> => {
   for (const row of data) {
-    console.log('ROW', row.nro_guia)
+
+    const imagenBuffer = fs.readFileSync(
+      `/IMGFOLLOW2/2024/8/75578/${TEST_NRO_GUIA}.png`
+    );
+    const imagenBase64 = imagenBuffer.toString("base64");
+
     const param: Param = {
       Barcode: row.nro_guia,
       UserID: "test",
       DigitalID: "ENT",
-      FileBase64: "test",
+      FileBase64: imagenBase64,
       Latitude: "test",
       Longitude: "test"
     };
     // console.log(param);
     try {
       // console.log('TOKEN:', token);
-      const response = await axios.post(process.env.URL_SEND as string, param, {
+      const response = await axios.post(process.env.URL_DIGITALIZATION as string, param, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -125,7 +128,8 @@ const liquidate = async (data: DataGuides, token: string): Promise<void> => {
   );
 };
 
-const digitalization = async (
+/*
+const digitalization_test = async (
   // data: DataGuides,
   token: string
 ): Promise<void> => {
@@ -157,6 +161,6 @@ const digitalization = async (
     }
     process.exit(1);
   }
-};
+};*/
 
-export { authenticate, sendData, liquidate };
+export { authenticate, digitalization, liquidate };
