@@ -81,4 +81,35 @@ const saveLiquidateLog = async (
   }
 };
 
-export { fetchData, saveLiquidateLog, connect, disconnect };
+const saveDigitalizationLog = async (
+  envio: Guide,
+  status: number,
+  message: string
+) => {
+  try {
+    const query = `
+      UPDATE t_envios_reportados_web_service
+      SET 
+        reporte_imagen = true,
+        ws_response_imagen = 'status: ${status} - message: ${message}',
+        fecha_ws_imagen = now()
+      WHERE id_guia = ${envio.id_guia}
+    `;
+
+    console.log({ "Inserte la guia:": envio.nro_guia });
+
+    const result = await dbClient.query(query);
+    //await dbClient.end();
+    return result.rows;
+  } catch (error: any) {
+    console.error("Error saving data to database:", error.message);
+  }
+};
+
+export {
+  fetchData,
+  saveLiquidateLog,
+  connect,
+  disconnect,
+  saveDigitalizationLog,
+};
