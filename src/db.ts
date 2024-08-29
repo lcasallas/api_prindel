@@ -91,7 +91,9 @@ const saveDigitalizationLog = async (
       UPDATE t_envios_reportados_web_service
       SET 
         reporte_imagen = true,
-        ws_response_imagen = 'status: ${status} - message: ${message}',
+        ws_response_imagen = 'status: ${status || ""} - message: ${
+      message || ""
+    }',
         fecha_ws_imagen = now()
       WHERE id_guia = ${envio.id_guia}
     `;
