@@ -97,6 +97,7 @@ const saveDigitalizationLog = async (
         fecha_ws_imagen = now()
       WHERE id_guia = ${envio.id_guia}
     `;
+    console.log({query})
 
     console.log({ "Inserte la guia:": envio.nro_guia });
 

@@ -129,11 +129,11 @@ const digitalization = async (
         await saveDigitalizationLog(
           envio,
           response.status,
-          JSON.stringify(response.data)
+	  JSON.stringify(response.data.Errors[0].Value)
         );
         console.log({
           "Guia:": guia,
-          "Response message:": response.data,
+          "Response message:": JSON.stringify(response.data.Errors[0].Value),
           "Response status:": response.status,
         });
       } catch (error: any) {
