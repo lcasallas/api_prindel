@@ -7,7 +7,7 @@ const main = async () => {
   const data = await fetchData("v_guias_reportar_472");
   await liquidate(data, token);
   const data2 = await fetchData("v_imagenes_reportar_472");
-  await digitalization(data, token);
+  await digitalization(data2, token);
   //await disconnect();
 };
 
