@@ -126,7 +126,11 @@ const digitalization = async (
             },
           }
         );
-        await saveDigitalizationLog(envio, response.status, response.data);
+        await saveDigitalizationLog(
+          envio,
+          response.status,
+          JSON.stringify(response.data)
+        );
         console.log({
           "Guia:": guia,
           "Response message:": response.data,
