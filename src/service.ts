@@ -10,7 +10,7 @@ dotenv.config();
 const authenticate = async (): Promise<string> => {
   try {
     const urlAuth = process.env.URL_AUTH;
-    const user = process.env.USER;
+    const user = process.env.USERWEBSERVICE;
     const password = process.env.PASSWORD;
 
     if (!urlAuth || !user || !password) {
